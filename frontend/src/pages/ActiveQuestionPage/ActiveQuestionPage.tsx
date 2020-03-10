@@ -45,8 +45,14 @@ export class ActiveQuestionPage extends Component<{ questions: IQuestion[] }, IA
                     <div onClick={() => this._answerSelected = 2}>{qusContent.opt2}</div>
                     <div onClick={() => this._answerSelected = 3}>{qusContent.opt3}</div>
                     <div onClick={() => this._answerSelected = 4}>{qusContent.opt4}</div>
+                    {
+                       /**
+                        * The pictures on the figma don't show what to do when a user
+                        * attempts to click "Next question" without an option selected
+                        */
+                    }
                     <NextButton
-                        buttonText={"gh"}
+                        buttonText={"Next question"}
                         performAction={() => this._answerSelected !== 0 ? this.updateQuestion() : console.log("fail")}
                     />
                 </div>
@@ -105,18 +111,27 @@ export class ActiveQuestionPage extends Component<{ questions: IQuestion[] }, IA
      *      set the category to complete (refer to render method as to why we do this) and update the component.
      */
     private updateQuestion() {
-        console.log(this.state.partitionedQuestions[this.state.currentQuestionCategoryIndex].questions.length - 1);
-        console.log(this.state.currentQuestionIndex);
+        // grab some local refs so that it isn't ridiculously long below
         const currentQusCatIndex = this.state.currentQuestionCategoryIndex;
         const currentQusIndex = this.state.currentQuestionIndex;
         const partitionedQuestions = this.state.partitionedQuestions;
 
+        // compare the current category's questions against the current qustion index,
+        // if it's not equal we're ok (i.e., we haven't hit the final question)
+        // as such, update the question index, push a the answer onto the _trackAnswers and reset the previous
+        // answer selected
         if (partitionedQuestions[currentQusCatIndex].questions.length - 1 !== currentQusIndex) {
             this.setState({
                 currentQuestionIndex: currentQusIndex + 1
             });
             this._trackedAnswers[currentQusCatIndex].questionAnswers.push(this._answerSelected);
             this._answerSelected = 0;
+        // however, if it is equal, we have hit the final question
+        // so we push the previous answer onto the previous category, but then push a brand
+        // new completion object onto our answers array. Obviously this will fail if the index
+        // goes out of bounds, but the task gives no info on what to do on completion
+        // the _categoryComplete simply lets our render method decide between which JSX block
+        // to render, either the competeBlock or questionBlock
         } else if (partitionedQuestions[currentQusCatIndex].questions.length - 1 === currentQusIndex) {
             this._trackedAnswers[currentQusCatIndex].questionAnswers.push(this._answerSelected);
             // idk what's after completion...
@@ -126,10 +141,12 @@ export class ActiveQuestionPage extends Component<{ questions: IQuestion[] }, IA
             this.setState({});
             console.log("category complete");
         }
-
-        console.log("boop");
     }
 
+    /**
+     * Due to the design of the app, simply progressing our
+     * category index will progress the survey
+     */
     private progressToNextCategory() {
         this._categoryComplete = false;
         this._answerSelected = 0;

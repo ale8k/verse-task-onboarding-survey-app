@@ -2,11 +2,14 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import IQuestion from "./interfaces/IQuestion";
 
-// pages (create index.ts for this...)
 import BasePage from "./pages/BasePage/BasePage";
 import { ActiveQuestionPage } from "./pages/ActiveQuestionPage/ActiveQuestionPage";
 import "./App.scss";
 
+/**
+ * I'd just like to start with that I don't usually leave comments in my code,
+ * but as the README recommended it I have.
+ */
 export default class App extends Component<any, { questions: IQuestion[] }> {
      constructor(props: any) {
          super(props);
@@ -28,8 +31,7 @@ export default class App extends Component<any, { questions: IQuestion[] }> {
                         <Route path="/" exact render={() => this.state.questions.length > 0 ? <BasePage/> :
                         <div>Loading...</div>}/>
                         {
-                            // remember to protect this route Alex,
-                            // if you don't then people can go here prior to api call
+                            // should protect this route, as the api is only called on App
                         }
                         <Route path="/questions-active" render={() => <ActiveQuestionPage questions={this.state.questions}/>}/>
                 </Router>
