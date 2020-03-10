@@ -39,22 +39,26 @@ export default class DbConn {
      * it is optional however if opting to fetch all
      */
     public async fetchAllQuestionsByCategory(category?: String): Promise<IQuestion[] | undefined> {
-        // we ensure the execution is performed prior so that we can return an 'actual' promise
-        if (category !== undefined) {
-            return await questionModel.find({
-                questionCategory: category
-            }, (err, res) => {
-                if (err) {
-                    console.log(err);
-                }
-            }).exec() as unknown as IQuestion[];
-        } else {
+        /**
+         * Optionally grab questions via category, would be suitable for large
+         * amounts of data. As this is only a small app, and to save time,
+         * just grab them all.
+         */
+        // if (category !== undefined) {
+        //     return await questionModel.find({
+        //         questionCategory: category
+        //     }, (err, res) => {
+        //         if (err) {
+        //             console.log(err);
+        //         }
+        //     }).exec() as unknown as IQuestion[];
+        // } else {
             return await questionModel.find((err, res) => {
                 if (err) {
                     console.log(err);
                 }
             }).exec() as unknown as IQuestion[];
-        }
+        // }
     }
 
     /**
