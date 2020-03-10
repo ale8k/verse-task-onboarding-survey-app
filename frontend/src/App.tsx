@@ -1,11 +1,13 @@
-import React, { Component, FunctionComponent } from "react";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import React, { Component } from "react";
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import IQuestion from "./interfaces/IQuestion";
 
 // pages (create index.ts for this...)
-import { BasePage } from "./pages/BasePage/BasePage";
+import BasePage from "./pages/BasePage/BasePage";
+import { ActiveQuestionPage } from "./pages/ActiveQuestionPage/ActiveQuestionPage";
 import "./App.scss";
 
-export default class App extends Component<{}, { questions: string[] }> {
+export default class App extends Component<any, { questions: IQuestion[] }> {
      constructor(props: any) {
          super(props);
 
@@ -20,7 +22,16 @@ export default class App extends Component<{}, { questions: string[] }> {
         return (
             <div className="App">
                 <Router>
-                    <Route path="/" exact render={() => <BasePage/>}/>
+                        {
+                            // sorry for the lazy loading div lol.
+                        }
+                        <Route path="/" exact render={() => this.state.questions.length > 0 ? <BasePage/> :
+                        <div>Loading...</div>}/>
+                        {
+                            // remember to protect this route Alex,
+                            // if you don't then people can go here prior to api call
+                        }
+                        <Route path="/questions-active" render={() => <ActiveQuestionPage questions={this.state.questions}/>}/>
                 </Router>
             </div>
         );
@@ -33,7 +44,6 @@ export default class App extends Component<{}, { questions: string[] }> {
                 questions: data
             });
         }).then(() => console.log(this.state.questions));
-
     }
 
 }

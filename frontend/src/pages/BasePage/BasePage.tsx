@@ -1,10 +1,11 @@
 import React, { FunctionComponent }from "react";
+import { withRouter } from "react-router-dom";
 import "./BasePage.scss";
 
 // components
 import { NextButton } from "../../components/NextButton/NextButton";
 
-export const BasePage: FunctionComponent<any> = ({ history }) => {
+const BasePage: FunctionComponent<any> = ({ history }) => {
     return (
         <div className="BasePage">
             <img src={require("../../initial-survey-img.PNG")} className="initial-survey-img" />
@@ -14,7 +15,9 @@ export const BasePage: FunctionComponent<any> = ({ history }) => {
                 Travel, and Other that will let us calculate your personal
                 carbon footprint (or Parprint as we like to call it).
             </p>
-            <NextButton buttonText="Take the survey" performAction={() => history.push("/bob")} />
+            <NextButton buttonText="Take the survey" performAction={() => history.push("/questions-active")} />
         </div>
     );
 };
+
+export default withRouter(BasePage);
