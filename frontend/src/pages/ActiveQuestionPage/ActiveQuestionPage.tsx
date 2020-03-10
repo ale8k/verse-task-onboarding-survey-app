@@ -15,6 +15,7 @@ export class ActiveQuestionPage extends Component<{ questions: IQuestion[] }, IA
     private _answerSelected: number = 0;
     private _categoryComplete: boolean = false;
     private _trackedAnswers: { category: number, questionAnswers: number[] }[] = [{ category: 0, questionAnswers: [] }];
+    private _currentQuestion: number = 1;
 
     constructor(props: { questions: IQuestion[] }) {
         super(props);
@@ -38,7 +39,7 @@ export class ActiveQuestionPage extends Component<{ questions: IQuestion[] }, IA
             return (
                 <div>
                     <div>progress meters?</div>
-                    <div>{this.state.currentQuestionIndex + 1} of {this.state.totalQuestions}</div>
+                    <div>{this._currentQuestion++} of {this.state.totalQuestions}</div>
                     <div>{this.state.partitionedQuestions[catIndex].questions[qusIndex].question}</div>
                     <div onClick={() => this._answerSelected = 1}>{qusContent.opt1}</div>
                     <div onClick={() => this._answerSelected = 2}>{qusContent.opt2}</div>
@@ -64,12 +65,12 @@ export class ActiveQuestionPage extends Component<{ questions: IQuestion[] }, IA
         const completeBlock = () => {
             const categoryCompleteName: string = this.state.partitionedQuestions[this.state.currentQuestionCategoryIndex].category;
             const previousAnswers: number[] = this._trackedAnswers[this.state.currentQuestionCategoryIndex].questionAnswers;
-            let nextCategoryToComplete: string;
+            let nextCategoryToComplete: string | undefined;
             // idk what's after completion...
             try {
                 nextCategoryToComplete = this.state.partitionedQuestions[this.state.currentQuestionCategoryIndex + 1].category;
             } catch (e) {
-                throw e;
+                nextCategoryToComplete = "end of categories";
             }
             return (
                 <div>
@@ -118,6 +119,8 @@ export class ActiveQuestionPage extends Component<{ questions: IQuestion[] }, IA
             this._answerSelected = 0;
         } else if (partitionedQuestions[currentQusCatIndex].questions.length - 1 === currentQusIndex) {
             this._trackedAnswers[currentQusCatIndex].questionAnswers.push(this._answerSelected);
+            // idk what's after completion...
+            this._trackedAnswers.push({ category: currentQusCatIndex + 1, questionAnswers: [] });
             console.log(this._trackedAnswers[currentQusCatIndex].questionAnswers);
             this._categoryComplete = true;
             this.setState({});
