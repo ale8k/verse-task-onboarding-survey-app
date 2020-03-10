@@ -1,5 +1,5 @@
 import mongoose, { Document } from "mongoose";
-import questionModel from "./questions";
+import questionModel from "./question";
 
 // just leave _id option, doesn't really matter
 interface IQuestion {
@@ -40,10 +40,10 @@ export default class DbConn {
      */
     public async fetchAllQuestionsByCategory(category?: String): Promise<IQuestion[] | undefined> {
         // we ensure the execution is performed prior so that we can return an 'actual' promise
-        if (category) {
+        if (category !== undefined) {
             return await questionModel.find({
                 questionCategory: category
-            }, (err) => {
+            }, (err, res) => {
                 if (err) {
                     console.log(err);
                 }
