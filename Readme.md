@@ -45,6 +45,10 @@ As for DB, Mongo just made sense.
 OvernightJS: https://www.npmjs.com/package/@overnightjs/core // Mimics Web API
 NestJS: https://www.npmjs.com/org/nestjs // Mimics Angular 2+ structure
 
+As for the frontend, I've not used any responsive techniques i.e., media queries as it being tested only
+on the iPhone 5? I hope this is ok.
+I've only not used any accessibility techniques as it's for mobile i.e., aria, alts etc.
+
 To run the frontend, simply just perform npm run start.
 To run the backend, create a .env file at the root and place the following env variables relative
 to your local i.e.:

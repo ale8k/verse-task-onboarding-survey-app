@@ -1,0 +1,28 @@
+@import "./styles/variables.scss";
+
+.App {
+  height: 100vh;
+  text-align: center;
+  background-color: $base-background-colour;
+
+  .initial-survey-img {
+    margin-top: 10vh;
+    width: 90vw;
+  }
+
+  .initial-survey-header {
+    font-size: 1.3em;
+    margin: 3vh auto;
+    width: 80vw;
+  }
+
+  .initial-survey-paragraph {
+    font-weight: 600;
+    margin: 3vw auto;
+    width: 80vw;
+  }
+  
+}
+
+
+
