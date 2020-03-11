@@ -1,21 +1,40 @@
 import React, { Component } from "react";
+import IActiveQuestionPageState from "../../interfaces/IActiveQuestionPageState";
 import IQuestion from "../../interfaces/IQuestion";
 import { NextButton } from "../../components/NextButton/NextButton";
-
-interface IActiveQuestionPageState {
-    totalQuestions: number;
-    partitionedQuestions: { category: string, questions: IQuestion[] }[];
-    currentQuestionCategoryIndex: number;
-    currentQuestionIndex: number;
-}
+import { ProgressMeter } from "../../pages/ActiveQuestionPage/components/ProgressMeter";
+import "./ActionQuestionPage.scss";
 
 export class ActiveQuestionPage extends Component<{ questions: IQuestion[] }, IActiveQuestionPageState> {
+    /**
+     * Remove default TS readonly state type
+     */
     public readonly state: IActiveQuestionPageState;
+    /**
+     * The partitioned questions in their respective categories
+     */
     private _partitonedQuestions = this.partitionQuestionsByCategory(this.props.questions);
+    /**
+     * The current answer selected by the user (1-4)
+     */
     private _answerSelected: number = 0;
+    /**
+     * A flag to indicate which block to render on state update (questions or completion blocks)
+     */
     private _categoryComplete: boolean = false;
+    /**
+     * All the answers selected (numbers) shoved into a multi-dimensional array
+     * along with the categories they belong to
+     */
     private _trackedAnswers: { category: number, questionAnswers: number[] }[] = [{ category: 0, questionAnswers: [] }];
+    /**
+     * Simple tracker for the Question N of X
+     */
     private _currentQuestion: number = 1;
+    /**
+     * Void array tracking the amount of data present in the progress bars
+     */
+    private _progressBarStates: number[][] = [];
 
     constructor(props: { questions: IQuestion[] }) {
         super(props);
@@ -27,29 +46,72 @@ export class ActiveQuestionPage extends Component<{ questions: IQuestion[] }, IA
             currentQuestionIndex: 0
         };
 
-        console.log(this.state.partitionedQuestions);
+        /**
+         * Get the amount of categories prior to updating the
+         * answered values, prevent null/undefined errors
+         */
+        this._partitonedQuestions.forEach((questionGroup) => {
+            this._progressBarStates.push([]);
+        });
     }
 
-    public render() {
+    public render(): JSX.Element {
         const catIndex = this.state.currentQuestionCategoryIndex;
         const qusIndex = this.state.currentQuestionIndex;
         const qusContent = this.state.partitionedQuestions[catIndex].questions[qusIndex];
 
-        const questionBlock = () => {
+        /**
+         * A method to force a state update, so that the conditional
+         * classes on the questions update
+         * @param ansNumber the answer number selected by the user
+         */
+        const updateAnswerSelected = (ansNumber: number): void => {
+            this._answerSelected = ansNumber;
+            this.setState({});
+        };
+
+        /**
+         * The block resposible for all question related rendering
+         */
+        const questionBlock = (): JSX.Element => {
             return (
-                <div>
-                    <div>progress meters?</div>
-                    <div>{this._currentQuestion++} of {this.state.totalQuestions}</div>
-                    <div>{this.state.partitionedQuestions[catIndex].questions[qusIndex].question}</div>
-                    <div onClick={() => this._answerSelected = 1}>{qusContent.opt1}</div>
-                    <div onClick={() => this._answerSelected = 2}>{qusContent.opt2}</div>
-                    <div onClick={() => this._answerSelected = 3}>{qusContent.opt3}</div>
-                    <div onClick={() => this._answerSelected = 4}>{qusContent.opt4}</div>
+                <div className="ActionQuestionPage">
+                    <div className="progress-meter-container">
+                        {
+                            this.state.partitionedQuestions.map((questionGroup, index) => {
+                                return ProgressMeter(questionGroup, this._progressBarStates, index);
+                            })
+                        }
+                    </div>
+                    <div className="current-question-counter">Question {this._currentQuestion} of {this.state.totalQuestions}</div>
+                    <h1 className="current-question-text">{this.state.partitionedQuestions[catIndex].questions[qusIndex].question}</h1>
+                    <div className="question-option-container">
+                        <div
+                            className={`question-option ${this._answerSelected === 1 ? "active" : ""}`}
+                            onClick={() => updateAnswerSelected(1)}>
+                            {qusContent.opt1}
+                        </div>
+                        <div
+                            className={"question-option " + (this._answerSelected === 2 ? "active" : "")}
+                            onClick={() => updateAnswerSelected(2)}>
+                            {qusContent.opt2}
+                        </div>
+                        <div
+                            className={"question-option " + (this._answerSelected === 3 ? "active" : "")}
+                            onClick={() => updateAnswerSelected(3)}>
+                            {qusContent.opt3}
+                        </div>
+                        <div
+                            className={"question-option " + (this._answerSelected === 4 ? "active" : "")}
+                            onClick={() => updateAnswerSelected(4)}>
+                            {qusContent.opt4}
+                        </div>
+                    </div>
                     {
-                       /**
-                        * The pictures on the figma don't show what to do when a user
-                        * attempts to click "Next question" without an option selected
-                        */
+                        /**
+                         * The pictures on the figma don't show what to do when a user
+                         * attempts to click "Next question" without an option selected
+                         */
                     }
                     <NextButton
                         buttonText={"Next question"}
@@ -60,15 +122,12 @@ export class ActiveQuestionPage extends Component<{ questions: IQuestion[] }, IA
         };
 
         /**
-         * Coming back from the updateQuestion() method,
-         * this block simply displays the latest previous data
-         * in a 'complete' format and provides us a way to proceed
-         * to the next category.
+         * The block resposible for all completion rendering
          *
          * Now I don't actually know the logic involved in emissions...
-         * So this is just a basic block displaying the answers that were provided? lol.
+         * So this is just a basic block displaying the answers that were provided
          */
-        const completeBlock = () => {
+        const completeBlock = (): JSX.Element => {
             const categoryCompleteName: string = this.state.partitionedQuestions[this.state.currentQuestionCategoryIndex].category;
             const previousAnswers: number[] = this._trackedAnswers[this.state.currentQuestionCategoryIndex].questionAnswers;
             let nextCategoryToComplete: string | undefined;
@@ -95,12 +154,11 @@ export class ActiveQuestionPage extends Component<{ questions: IQuestion[] }, IA
 
         return (
             <div>
-                { this._categoryComplete ? completeBlock() : questionBlock()}
+                {this._categoryComplete ? completeBlock() : questionBlock()}
             </div>
         );
     }
 
-    // this sucks, do it better
     /**
      * This may look a tad odd, but its fairly simple how it works:
      *  1)  The first if statement checks that our question category index (our total categories)
@@ -110,8 +168,7 @@ export class ActiveQuestionPage extends Component<{ questions: IQuestion[] }, IA
      *  2)  If it is out of bounds, we know we've completed that category. So again, we track the last answer,
      *      set the category to complete (refer to render method as to why we do this) and update the component.
      */
-    private updateQuestion() {
-        // grab some local refs so that it isn't ridiculously long below
+    private updateQuestion(): void {
         const currentQusCatIndex = this.state.currentQuestionCategoryIndex;
         const currentQusIndex = this.state.currentQuestionIndex;
         const partitionedQuestions = this.state.partitionedQuestions;
@@ -125,29 +182,38 @@ export class ActiveQuestionPage extends Component<{ questions: IQuestion[] }, IA
                 currentQuestionIndex: currentQusIndex + 1
             });
             this._trackedAnswers[currentQusCatIndex].questionAnswers.push(this._answerSelected);
+            // we're updating the progress bars current category here,
+            // doesn't matter what we push
+            this._progressBarStates[currentQusCatIndex].push(0);
+            console.log("progress bars:");
+            console.log(this._progressBarStates);
             this._answerSelected = 0;
-        // however, if it is equal, we have hit the final question
-        // so we push the previous answer onto the previous category, but then push a brand
-        // new completion object onto our answers array. Obviously this will fail if the index
-        // goes out of bounds, but the task gives no info on what to do on completion
-        // the _categoryComplete simply lets our render method decide between which JSX block
-        // to render, either the competeBlock or questionBlock
+            this._currentQuestion++;
+            // however, if it is equal, we have hit the final question
+            // so we push the previous answer onto the previous category, but then push a brand
+            // new completion object onto our answers array. Obviously this will fail if the index
+            // goes out of bounds, but the task gives no info on what to do on completion
+            // the _categoryComplete simply lets our render method decide between which JSX block
+            // to render, either the competeBlock or questionBlock
         } else if (partitionedQuestions[currentQusCatIndex].questions.length - 1 === currentQusIndex) {
             this._trackedAnswers[currentQusCatIndex].questionAnswers.push(this._answerSelected);
             // idk what's after completion...
             this._trackedAnswers.push({ category: currentQusCatIndex + 1, questionAnswers: [] });
-            console.log(this._trackedAnswers[currentQusCatIndex].questionAnswers);
+            this._progressBarStates[currentQusCatIndex].push(0);
+            console.log("progress bars:");
+            console.log(this._progressBarStates);
             this._categoryComplete = true;
+            this._currentQuestion++;
             this.setState({});
             console.log("category complete");
         }
     }
 
     /**
-     * Due to the design of the app, simply progressing our
-     * category index will progress the survey
+     * Progresses the category index, so that upon next render
+     * the questions block is aware of our state
      */
-    private progressToNextCategory() {
+    private progressToNextCategory(): void {
         this._categoryComplete = false;
         this._answerSelected = 0;
 

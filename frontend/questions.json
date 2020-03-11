@@ -1,0 +1,6 @@
+{"_id":{"$oid":"5e679d57eecbff456c153600"},"questionCategory":"Diet","question":"How often do you eat meat and dairy?","opt1":"Daily","opt2":"1 or 2 times","opt3":"3+ times per week","opt4":"Not at all"}
+{"_id":{"$oid":"5e679db8eecbff456c153601"},"questionCategory":"Diet","question":"How big are your portions sizes?","opt1":"Smaller than average","opt2":"Average","opt3":"Larger than average","opt4":"I'm not sure"}
+{"_id":{"$oid":"5e679e26eecbff456c153602"},"questionCategory":"Diet","question":"How much food ends up wasted in your household?","opt1":"None","opt2":"1-5 plates per week","opt3":"6-10 plates per week","opt4":"More than 10 plates per week"}
+{"_id":{"$oid":"5e679e58eecbff456c153603"},"questionCategory":"Diet","question":"How often do you eat avocados, asparagus, kiwi fruit or pineapples?","opt1":"Daily","opt2":"1 or 2 times","opt3":"3+ times per week","opt4":"Not at all"}
+{"_id":{"$oid":"5e67c056eecbff456c153604"},"questionCategory":"Xxx","question":"xx","opt1":"x","opt2":"x","opt3":"x","opt4":"x"}
+{"_id":{"$oid":"5e683bd9eecbff456c153605"},"questionCategory":"Xxx","question":"xx","opt1":"x","opt2":"x","opt3":"x","opt4":"x"}

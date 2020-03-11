@@ -5,7 +5,7 @@ import "./BasePage.scss";
 // components
 import { NextButton } from "../../components/NextButton/NextButton";
 
-const BasePage: FunctionComponent<any> = ({ history }) => {
+const BasePage: FunctionComponent<any> = ({ history }): JSX.Element => {
     return (
         <div className="BasePage">
             <img src={require("../../initial-survey-img.PNG")} className="initial-survey-img" />
@@ -15,7 +15,7 @@ const BasePage: FunctionComponent<any> = ({ history }) => {
                 Travel, and Other that will let us calculate your personal
                 carbon footprint (or Parprint as we like to call it).
             </p>
-            <NextButton buttonText="Take the survey" performAction={() => history.push("/questions-active")} />
+            <NextButton buttonText="Take the survey" performAction={(): void => history.push("/questions-active")} />
         </div>
     );
 };

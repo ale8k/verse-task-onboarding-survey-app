@@ -6,10 +6,6 @@ import BasePage from "./pages/BasePage/BasePage";
 import { ActiveQuestionPage } from "./pages/ActiveQuestionPage/ActiveQuestionPage";
 import "./App.scss";
 
-/**
- * I'd just like to start with that I don't usually leave comments in my code,
- * but as the README recommended it I have.
- */
 export default class App extends Component<any, { questions: IQuestion[] }> {
      constructor(props: any) {
          super(props);
@@ -39,6 +35,11 @@ export default class App extends Component<any, { questions: IQuestion[] }> {
         );
     }
 
+    /**
+     * Grabs all questions from single end point,
+     * there is code to grab categories by query string [in the back end] though if we opted
+     * for a load as of and when route.
+     */
     private async getAllQuestions(): Promise<void> {
         // adjust accordingly to your environment
         await fetch("http://127.0.0.1:3001/questions").then(d => d.json()).then((data) => {
