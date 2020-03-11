@@ -73,3 +73,41 @@
     }
   }
 }
+
+.ActiveQuestionPageCompletionBlock {
+
+  .category-name-container {
+    height: 20vh;
+    color: white;
+    padding: 3vw;
+    background-color: #EC5569;
+    
+    .category-name-text {
+      font-size: 4em;
+      font-weight: 700;
+    }
+  }
+
+  .main-content-container {
+    height: 40vh;
+
+    p {
+      margin: 0;
+    }
+  }
+
+  .continue-container {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+
+    .continue-text {
+      font-weight: 600;
+      width: 70vw;
+      margin: 8vh 0 0 0;
+    }
+  }
+}

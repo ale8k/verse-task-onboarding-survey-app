@@ -138,16 +138,25 @@ export class ActiveQuestionPage extends Component<{ questions: IQuestion[] }, IA
                 nextCategoryToComplete = "end of categories";
             }
             return (
-                <div>
-                    <div>{categoryCompleteName}</div>
-                    <p>UK Nation average: 2.9 tons of CO2 produced per year</p>
-                    <div>Your answers were: {previousAnswers}</div>
-                    <p>You're using 3.2 Tons of CO2 / year, you also made a spelling mistake ;)</p>
-                    <p>Lets take a look at how you look in the {nextCategoryToComplete} category...</p>
-                    <NextButton
-                        buttonText={"Continue"}
-                        performAction={() => this.progressToNextCategory()}
-                    />
+                <div className="ActiveQuestionPageCompletionBlock">
+                    <div className="category-name-container">
+                        <div className="category-name-text">{categoryCompleteName}</div>
+                        <div>Your score</div>
+                    </div>
+                    <div className="main-content-container">
+                        <p>UK Nation average: 2.9 tons of CO2 produced per year</p>
+                        <div>Your answers were: {previousAnswers}</div>
+                        <p>You're using 3.2 Tons of CO2 / year, you also made a spelling mistake ;)</p>
+                    </div>
+                    <div className="continue-container">
+                        <p className="continue-text">Lets take a look at how you look in the
+                            <span style={{ fontStyle: "italic", color: "#4BC2BC" }}> {nextCategoryToComplete} </span> category...
+                        </p>
+                        <NextButton
+                            buttonText={"Continue"}
+                            performAction={() => this.progressToNextCategory()}
+                        />
+                    </div>
                 </div>
             );
         };
