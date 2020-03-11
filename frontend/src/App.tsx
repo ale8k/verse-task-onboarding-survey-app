@@ -6,7 +6,7 @@ import BasePage from "./pages/BasePage/BasePage";
 import { ActiveQuestionPage } from "./pages/ActiveQuestionPage/ActiveQuestionPage";
 import "./App.scss";
 
-export default class App extends Component<any, { questions: IQuestion[] }> {
+export default class App extends Component<{}, { questions: IQuestion[] }> {
      constructor(props: any) {
          super(props);
 

@@ -15,7 +15,8 @@
         margin: 2vh;
 
         .progress-bar {
-            background-color: $secondary-text-colour;
+            // purposefully hardcoded, this is a very specific colour in the app not used elsewhere
+            background-color: #DBDBDB ;
             height: 2vh;
             width: 13vw;
 
